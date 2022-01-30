@@ -18,7 +18,7 @@ build-job:       # This job runs in the build stage, which runs first.
     - echo "Gradle build complete."
   artifacts:
     paths:
-      - artifacts/build
+      - Godot-Android-Ads-Plugin/build/outputs/aar
     expire_in: 1 week
 
 

@@ -1,32 +1,34 @@
 package com.b4dnetwork.godot.android_ads_plugin.shared;
 
 public class AdListeners {
+
     /**
      * Interstitial ad listener interface
      */
     public interface InterstitialListener {
-        public void onInterstitialLoaded();
-        public void onInterstitialFailedToLoad(int errorCode, String errorMessage);
-        public void onInterstitialOpened();
-        public void onInterstitialClosed();
+        void onInterstitialLoaded(int adsProvider);
+        void onInterstitialFailedToLoad(int adsProvider, int errorCode, String errorMessage);
+        void onInterstitialOpened(int adsProvider);
+        void onInterstitialClosed(int adsProvider);
     }
 
 
     public interface RewardedListener {
-        public void onRewardedLoaded();
-        public void onRewardedFailedToLoad(int errorCode, String errorMessage);
-        public void onRewardedOpened();
-        public void onRewardedClosed();
-        public void onReward(String type, int amount);
+        void onRewardedLoaded(int adsProvider);
+        void onRewardedFailedToLoad(int adsProvider, int errorCode, String errorMessage);
+        void onRewardedOpened(int adsProvider);
+        void onRewardedClosed(int adsProvider);
+        void onReward(int adsProvider, String type, int amount);
     }
 
 
     public interface BannerListener {
-        public void onBannerLoaded();
-        public void onBannerFailedToLoad(int errorCode, String errorMessage);
-        public void onBannerShow();
-        public void onBannerHide();
+        void onBannerLoaded();
+        void onBannerFailedToLoad(int adsProvider, int errorCode, String errorMessage);
+        void onBannerShow();
+        void onBannerHide();
     }
 
 }
+
 

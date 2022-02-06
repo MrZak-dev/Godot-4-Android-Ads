@@ -1,6 +1,6 @@
 
 
-image: androidsdk/android-30:latest
+image: cimg/android:2022.01.1
 
 
 

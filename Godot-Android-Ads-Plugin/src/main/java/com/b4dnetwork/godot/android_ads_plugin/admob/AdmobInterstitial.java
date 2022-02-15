@@ -40,6 +40,9 @@ public class AdmobInterstitial {
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                isLoaded = false;
+                interstitialInstance = null;
+
                 listener.onInterstitialFailedToLoad(AdsProvider.ADMOB.getValue(),
                         loadAdError.getCode(),
                         loadAdError.getMessage());

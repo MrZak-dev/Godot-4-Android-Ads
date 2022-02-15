@@ -2,7 +2,7 @@ plugins {
     id 'com.android.library'
 }
 
-ext.pluginVersion = "1.0.0"
+ext.pluginVersion = "0.1.0"
 
 android {
     compileSdk 31
@@ -30,7 +30,7 @@ android {
 
     libraryVariants.all { variant ->
         variant.outputs.all { output ->
-            output.outputFileName = "GodotAdsPlugin.${pluginVersion}.${variant.name}.aar"
+            output.outputFileName = "GodotAndroidAds.${pluginVersion}.${variant.name}.aar"
         }
     }
 }

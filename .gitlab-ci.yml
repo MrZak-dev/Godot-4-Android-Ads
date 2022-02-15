@@ -1,6 +1,6 @@
 
 
-image: androidsdk/android-30:latest
+image: cimg/android:2022.01.1
 
 
 
@@ -13,7 +13,7 @@ build-job:       # This job runs in the build stage, which runs first.
   stage: build
   script:
     - echo "Gradle build started..."
-    - chmod +x gradlew
+    # - chmod +x gradlew
     - ./gradlew assembleRelease
     - echo "Gradle build complete."
   artifacts:

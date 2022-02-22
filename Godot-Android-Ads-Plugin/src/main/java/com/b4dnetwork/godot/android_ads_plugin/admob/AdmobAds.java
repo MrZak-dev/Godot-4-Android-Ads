@@ -15,6 +15,7 @@ public class AdmobAds {
 
     private AdmobInterstitial interstitial;
     private AdmobRewarded rewarded;
+    private AdmobBanner banner;
 
     private boolean isInitialized = false;
 
@@ -38,6 +39,7 @@ public class AdmobAds {
 
         initializeInterstitial();
         initializeRewarded();
+        initializeBanner();
     }
 
 
@@ -80,6 +82,21 @@ public class AdmobAds {
         }
 
         activity.runOnUiThread(() -> rewarded.show());
+    }
+
+
+    public void loadBanner(String adId, int adSize, boolean isTop){
+        activity.runOnUiThread(() -> banner.load(adId, adSize, isTop,adRequest));
+    }
+
+
+    public void showBanner(){
+        activity.runOnUiThread(() -> banner.show());
+    }
+
+
+    public void hideBanner(){
+        activity.runOnUiThread(() -> banner.hide());
     }
 
 
@@ -143,5 +160,33 @@ public class AdmobAds {
             }
         });
     }
+
+
+    private void initializeBanner(){
+        banner = new AdmobBanner(activity, pluginInstance.getLayout(), new AdListeners.BannerListener() {
+            @Override
+            public void onBannerLoaded(int adsProvider) {
+                pluginInstance.emitPluginSignal(GodotSignals.BANNER_LOADED.getValue(), adsProvider);
+            }
+
+            @Override
+            public void onBannerFailedToLoad(int adsProvider, int errorCode, String errorMessage) {
+                pluginInstance.emitPluginSignal(GodotSignals.BANNER_FAILED_TO_LOAD.getValue(),
+                        adsProvider, errorCode, errorMessage);
+            }
+
+            @Override
+            public void onBannerShow(int adsProvider) {
+
+            }
+
+            @Override
+            public void onBannerHide(int adsProvider) {
+
+            }
+        });
+    }
+
+
 
 }

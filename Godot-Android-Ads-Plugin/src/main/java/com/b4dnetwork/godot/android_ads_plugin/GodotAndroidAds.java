@@ -2,6 +2,8 @@ package com.b4dnetwork.godot.android_ads_plugin;
 
 import android.app.Activity;
 import android.util.Log;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
@@ -18,12 +20,24 @@ import java.util.Set;
 public class GodotAndroidAds extends GodotPlugin {
 
     private final Activity activity;
+    private FrameLayout layout = null;
 
     private AdmobAds admobInstance = null;
 
     public GodotAndroidAds(Godot godot) {
         super(godot);
         this.activity = getActivity();
+    }
+
+    @Override
+    public View onMainCreate(Activity activity) {
+        layout = new FrameLayout(activity);
+        return layout;
+    }
+
+
+    public FrameLayout getLayout(){
+        return layout;
     }
 
 
@@ -76,6 +90,36 @@ public class GodotAndroidAds extends GodotPlugin {
     }
 
 
+    @UsedByGodot
+    public void loadAdmobBanner(String adId, int adSize, boolean isTop){
+        if(admobInstance == null){
+            emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
+            return;
+        }
+        admobInstance.loadBanner(adId, adSize, isTop);
+    }
+
+
+    @UsedByGodot
+    public void showAdmobBanner(){
+        if(admobInstance == null){
+            emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
+            return;
+        }
+        admobInstance.showBanner();
+    }
+
+
+    @UsedByGodot
+    public void hideAdmobBanner() {
+        if(admobInstance == null){
+            emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
+            return;
+        }
+        admobInstance.hideBanner();
+    }
+
+
     @NonNull
     @Override
     public String getPluginName() {
@@ -103,6 +147,11 @@ public class GodotAndroidAds extends GodotPlugin {
         signals.add(new SignalInfo(GodotSignals.REWARDED_CLOSED.getValue(), Integer.class));
         signals.add(new SignalInfo(GodotSignals.REWARD.getValue(), Integer.class, String.class,
                 Integer.class));
+
+        //Banner signals
+        signals.add(new SignalInfo(GodotSignals.BANNER_LOADED.getValue(), Integer.class));
+        signals.add(new SignalInfo(GodotSignals.BANNER_FAILED_TO_LOAD.getValue(), Integer.class,
+                Integer.class, String.class));
 
         // General signals
         signals.add(new SignalInfo(GodotSignals.LOG_MESSAGE.getValue(), String.class));
@@ -143,6 +192,10 @@ public class GodotAndroidAds extends GodotPlugin {
         REWARDED_OPENED("_on_rewarded_opened"),
         REWARDED_CLOSED("_on_rewarded_closed"),
         REWARD("_on_reward"),
+
+        BANNER_LOADED("_on_banner_loaded"),
+        BANNER_FAILED_TO_LOAD("_on_banner_failed_to_load"),
+
 
         LOG_MESSAGE("_on_log_message");
 

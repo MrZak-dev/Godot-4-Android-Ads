@@ -23,10 +23,10 @@ public class AdListeners {
 
 
     public interface BannerListener {
-        void onBannerLoaded();
+        void onBannerLoaded(int adsProvider);
         void onBannerFailedToLoad(int adsProvider, int errorCode, String errorMessage);
-        void onBannerShow();
-        void onBannerHide();
+        void onBannerShow(int adsProvider);
+        void onBannerHide(int adsProvider);
     }
 
 }

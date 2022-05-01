@@ -12,14 +12,17 @@ import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds.AdsProvider;
 
+import java.util.HashMap;
+import java.util.Objects;
+
 public class AdmobInterstitial {
 
 
     private final InterstitialListener listener;
     private final Activity activity;
-    private InterstitialAd interstitialInstance;
 
-    private boolean isLoaded = false;
+    private final HashMap<String,InterstitialAd> interstitialInstances = new HashMap<>();
+    private final HashMap<String, Boolean> interstitialLoadStatus = new HashMap<>();
 
 
     AdmobInterstitial(Activity activity, InterstitialListener listener){
@@ -27,23 +30,25 @@ public class AdmobInterstitial {
         this.activity = activity;
     }
 
-    public void load(String adId, AdRequest adRequest){
+    public void load(String adName, String adId, AdRequest adRequest){
         InterstitialAd.load(this.activity, adId, adRequest, new InterstitialAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
-                isLoaded = true;
-                interstitialInstance = interstitialAd;
+                interstitialLoadStatus.put(adName, true);
+                interstitialInstances.put(adName, interstitialAd);
+                setInterstitialCallbacks(adName);
 
-                listener.onInterstitialLoaded(AdsProvider.ADMOB.getValue());
-                setInterstitialCallbacks(interstitialAd);
+                listener.onInterstitialLoaded(AdsProvider.ADMOB.getValue(), adName);
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                isLoaded = false;
-                interstitialInstance = null;
+                interstitialLoadStatus.put(adName, false);
+                interstitialInstances.remove(adName);
 
-                listener.onInterstitialFailedToLoad(AdsProvider.ADMOB.getValue(),
+                listener.onInterstitialFailedToLoad(
+                        AdsProvider.ADMOB.getValue(),
+                        adName,
                         loadAdError.getCode(),
                         loadAdError.getMessage());
             }
@@ -51,25 +56,26 @@ public class AdmobInterstitial {
     }
 
 
-    public void show(){
-        if(isLoaded){
-            interstitialInstance.show(activity);
+    public void show(String adName){
+        if(Objects.requireNonNull(interstitialLoadStatus.get(adName))){
+            Objects.requireNonNull(interstitialInstances.get(adName)).show(activity);
         }
         // Log info ( interstitial not loaded yet call load to load it)
     }
 
 
-    private void setInterstitialCallbacks(InterstitialAd interstitial){
-        interstitial.setFullScreenContentCallback(new FullScreenContentCallback() {
-            @Override
-            public void onAdShowedFullScreenContent() {
-                listener.onInterstitialOpened(AdsProvider.ADMOB.getValue());
-            }
+    private void setInterstitialCallbacks(String adName){
+        Objects.requireNonNull(interstitialInstances.get(adName))
+                .setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdShowedFullScreenContent() {
+                    listener.onInterstitialOpened(AdsProvider.ADMOB.getValue(), adName);
+                }
 
-            @Override
-            public void onAdDismissedFullScreenContent() {
-                listener.onInterstitialClosed(AdsProvider.ADMOB.getValue());
-            }
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    listener.onInterstitialClosed(AdsProvider.ADMOB.getValue(), adName);
+                }
         });
     }
 

@@ -6,10 +6,10 @@ public class AdListeners {
      * Interstitial ad listener interface
      */
     public interface InterstitialListener {
-        void onInterstitialLoaded(int adsProvider);
-        void onInterstitialFailedToLoad(int adsProvider, int errorCode, String errorMessage);
-        void onInterstitialOpened(int adsProvider);
-        void onInterstitialClosed(int adsProvider);
+        void onInterstitialLoaded(int adsProvider, String adName);
+        void onInterstitialFailedToLoad(int adsProvider, String adName, int errorCode, String errorMessage);
+        void onInterstitialOpened(int adsProvider, String adName);
+        void onInterstitialClosed(int adsProvider, String adName);
     }
 
 

@@ -8,8 +8,6 @@ import com.b4dnetwork.godot.android_ads_plugin.shared.AdListeners;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 
-import org.godotengine.godot.GodotLib;
-import org.godotengine.godot.plugin.GodotPlugin;
 
 public class AdmobAds {
 
@@ -43,24 +41,24 @@ public class AdmobAds {
     }
 
 
-    public void loadInterstitial(String adId){
+    public void loadInterstitial(String adName, String adId){
 
         if(!this.isInitialized){
             // logger.log()
             return;
         }
 
-        activity.runOnUiThread(() -> interstitial.load(adId, adRequest));
+        activity.runOnUiThread(() -> interstitial.load(adName, adId, adRequest));
     }
 
 
-    public void showInterstitial(){
+    public void showInterstitial(String adName){
         if(!this.isInitialized){
             // logger.log()
             return;
         }
 
-        activity.runOnUiThread(() -> interstitial.show());
+        activity.runOnUiThread(() -> interstitial.show(adName));
     }
 
 
@@ -103,24 +101,28 @@ public class AdmobAds {
     private void initializeInterstitial(){
         interstitial = new AdmobInterstitial(this.activity, new AdListeners.InterstitialListener() {
             @Override
-            public void onInterstitialLoaded(int adsProvider) {
-                pluginInstance.emitPluginSignal(GodotSignals.INTERSTITIAL_LOADED.getValue(), adsProvider);
+            public void onInterstitialLoaded(int adsProvider, String adName) {
+                pluginInstance.emitPluginSignal(
+                        GodotSignals.INTERSTITIAL_LOADED.getValue(), adsProvider, adName);
             }
 
             @Override
-            public void onInterstitialFailedToLoad(int adsProvider, int errorCode, String errorMessage) {
+            public void onInterstitialFailedToLoad(
+                    int adsProvider, String adName,int errorCode, String errorMessage) {
                 pluginInstance.emitPluginSignal(GodotSignals.INTERSTITIAL_FAILED_TO_LOAD.getValue(),
                         adsProvider, errorCode, errorMessage);
             }
 
             @Override
-            public void onInterstitialOpened(int adsProvider) {
-                pluginInstance.emitPluginSignal(GodotSignals.INTERSTITIAL_OPENED.getValue(), adsProvider);
+            public void onInterstitialOpened(int adsProvider, String adName) {
+                pluginInstance.emitPluginSignal(
+                        GodotSignals.INTERSTITIAL_OPENED.getValue(), adsProvider);
             }
 
             @Override
-            public void onInterstitialClosed(int adsProvider) {
-                pluginInstance.emitPluginSignal(GodotSignals.INTERSTITIAL_CLOSED.getValue(), adsProvider);
+            public void onInterstitialClosed(int adsProvider, String adName) {
+                pluginInstance.emitPluginSignal(
+                        GodotSignals.INTERSTITIAL_CLOSED.getValue(), adsProvider);
             }
         });
     }

@@ -1,7 +1,6 @@
 package com.b4dnetwork.godot.android_ads_plugin;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -49,22 +48,22 @@ public class GodotAndroidAds extends GodotPlugin {
 
 
     @UsedByGodot
-    public void loadAdmobInterstitial(String adId){
+    public void loadAdmobInterstitial(String adName, String adId){
         if (admobInstance == null) {
             emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
             return;
         }
 
-        admobInstance.loadInterstitial(adId);
+        admobInstance.loadInterstitial(adName, adId);
     }
 
     @UsedByGodot
-    public void showAdmobInterstitial(){
+    public void showAdmobInterstitial(String adName){
         if (admobInstance == null) {
             emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
             return;
         }
-        admobInstance.showInterstitial();
+        admobInstance.showInterstitial(adName);
     }
 
 
@@ -133,7 +132,8 @@ public class GodotAndroidAds extends GodotPlugin {
         Set<SignalInfo> signals = new ArraySet<>();
 
         // Interstitial signals
-        signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_LOADED.getValue(), Integer.class));
+        signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_LOADED.getValue(),
+                Integer.class, String.class));
         signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_FAILED_TO_LOAD.getValue(),
                 Integer.class, Integer.class, String.class));
         signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_OPENED.getValue(), Integer.class));

@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 
 import com.b4dnetwork.godot.android_ads_plugin.shared.AdListeners.InterstitialListener;
+import com.b4dnetwork.godot.android_ads_plugin.shared.Utils;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
@@ -57,8 +58,12 @@ public class AdmobInterstitial {
 
 
     public void show(String adName){
-        if(Objects.requireNonNull(interstitialLoadStatus.get(adName))){
-            Objects.requireNonNull(interstitialInstances.get(adName)).show(activity);
+        if (!Utils.isHashHasKy(interstitialInstances, adName)){
+            // TODO : log message no ad with name available
+            return;
+        }
+        if(interstitialLoadStatus.get(adName)){
+            interstitialInstances.get(adName).show(activity);
         }
         // Log info ( interstitial not loaded yet call load to load it)
     }

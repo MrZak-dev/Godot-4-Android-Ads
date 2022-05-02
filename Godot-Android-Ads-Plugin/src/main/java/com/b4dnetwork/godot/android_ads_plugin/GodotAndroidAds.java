@@ -68,44 +68,44 @@ public class GodotAndroidAds extends GodotPlugin {
 
 
     @UsedByGodot
-    public void loadAdmobRewarded(String adId){
+    public void loadAdmobRewarded(String adName, String adId){
         if(admobInstance == null){
             emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
             return;
         }
 
-        admobInstance.loadRewarded(adId);
+        admobInstance.loadRewarded(adName, adId);
     }
 
 
     @UsedByGodot
-    public void showAdmobRewarded(){
+    public void showAdmobRewarded(String adName){
         if(admobInstance == null){
             emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
             return;
         }
 
-        admobInstance.showRewarded();
+        admobInstance.showRewarded(adName);
     }
 
 
     @UsedByGodot
-    public void loadAdmobBanner(String adId, int adSize, boolean isTop){
+    public void loadAdmobBanner(String adName, String adId, int adSize){
         if(admobInstance == null){
             emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
             return;
         }
-        admobInstance.loadBanner(adId, adSize, isTop);
+        admobInstance.loadBanner(adName, adId, adSize);
     }
 
 
     @UsedByGodot
-    public void showAdmobBanner(){
+    public void showAdmobBanner(String adName, boolean isOnTop){
         if(admobInstance == null){
             emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
             return;
         }
-        admobInstance.showBanner();
+        admobInstance.showBanner(adName, isOnTop);
     }
 
 
@@ -135,23 +135,30 @@ public class GodotAndroidAds extends GodotPlugin {
         signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_LOADED.getValue(),
                 Integer.class, String.class));
         signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_FAILED_TO_LOAD.getValue(),
-                Integer.class, Integer.class, String.class));
-        signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_OPENED.getValue(), Integer.class));
-        signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_CLOSED.getValue(), Integer.class));
+                Integer.class, String.class, Integer.class, String.class));
+        signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_OPENED.getValue(), Integer.class,
+                String.class));
+        signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_CLOSED.getValue(), Integer.class,
+                String.class));
 
         // Rewarded signals
-        signals.add(new SignalInfo(GodotSignals.REWARDED_LOADED.getValue(), Integer.class));
+        signals.add(new SignalInfo(GodotSignals.REWARDED_LOADED.getValue(), Integer.class,
+                String.class));
         signals.add(new SignalInfo(GodotSignals.REWARDED_FAILED_TO_LOAD.getValue(), Integer.class,
-                Integer.class, String.class));
-        signals.add(new SignalInfo(GodotSignals.REWARDED_OPENED.getValue(), Integer.class));
-        signals.add(new SignalInfo(GodotSignals.REWARDED_CLOSED.getValue(), Integer.class));
-        signals.add(new SignalInfo(GodotSignals.REWARD.getValue(), Integer.class, String.class,
+                String.class, Integer.class, String.class));
+        signals.add(new SignalInfo(GodotSignals.REWARDED_OPENED.getValue(), Integer.class,
+                String.class));
+        signals.add(new SignalInfo(GodotSignals.REWARDED_CLOSED.getValue(), Integer.class,
+                String.class));
+        signals.add(new SignalInfo(GodotSignals.REWARD.getValue(), Integer.class,String.class,
+                String.class,
                 Integer.class));
 
         //Banner signals
-        signals.add(new SignalInfo(GodotSignals.BANNER_LOADED.getValue(), Integer.class));
+        signals.add(new SignalInfo(GodotSignals.BANNER_LOADED.getValue(), Integer.class,
+                String.class));
         signals.add(new SignalInfo(GodotSignals.BANNER_FAILED_TO_LOAD.getValue(), Integer.class,
-                Integer.class, String.class));
+                String.class, Integer.class, String.class));
 
         // General signals
         signals.add(new SignalInfo(GodotSignals.LOG_MESSAGE.getValue(), String.class));

@@ -62,34 +62,34 @@ public class AdmobAds {
     }
 
 
-    public void loadRewarded(String adId){
+    public void loadRewarded(String adName, String adId){
 
         if(!this.isInitialized){
             // logger.log()
             return;
         }
 
-        activity.runOnUiThread(() -> rewarded.load(adId, adRequest));
+        activity.runOnUiThread(() -> rewarded.load(adName, adId, adRequest));
     }
 
 
-    public void showRewarded(){
+    public void showRewarded(String adName){
         if(!this.isInitialized){
             // logger.log()
             return;
         }
 
-        activity.runOnUiThread(() -> rewarded.show());
+        activity.runOnUiThread(() -> rewarded.show(adName));
     }
 
 
-    public void loadBanner(String adId, int adSize, boolean isTop){
-        activity.runOnUiThread(() -> banner.load(adId, adSize, isTop,adRequest));
+    public void loadBanner(String adName, String adId, int adSize){
+        activity.runOnUiThread(() -> banner.load(adName, adId, adSize, adRequest));
     }
 
 
-    public void showBanner(){
-        activity.runOnUiThread(() -> banner.show());
+    public void showBanner(String adName, boolean isOnTop){
+        activity.runOnUiThread(() -> banner.show(adName, isOnTop));
     }
 
 
@@ -116,13 +116,13 @@ public class AdmobAds {
             @Override
             public void onInterstitialOpened(int adsProvider, String adName) {
                 pluginInstance.emitPluginSignal(
-                        GodotSignals.INTERSTITIAL_OPENED.getValue(), adsProvider);
+                        GodotSignals.INTERSTITIAL_OPENED.getValue(), adsProvider, adName);
             }
 
             @Override
             public void onInterstitialClosed(int adsProvider, String adName) {
                 pluginInstance.emitPluginSignal(
-                        GodotSignals.INTERSTITIAL_CLOSED.getValue(), adsProvider);
+                        GodotSignals.INTERSTITIAL_CLOSED.getValue(), adsProvider, adName);
             }
         });
     }
@@ -132,33 +132,33 @@ public class AdmobAds {
         rewarded = new AdmobRewarded(this.activity, new AdListeners.RewardedListener(){
 
             @Override
-            public void onRewardedLoaded(int adsProvider) {
+            public void onRewardedLoaded(int adsProvider, String adName) {
                 pluginInstance.emitPluginSignal(GodotSignals.REWARDED_LOADED.getValue(),
-                        adsProvider);
+                        adsProvider, adName);
             }
 
             @Override
-            public void onRewardedFailedToLoad(int adsProvider, int errorCode, String errorMessage) {
+            public void onRewardedFailedToLoad(int adsProvider, String adName, int errorCode, String errorMessage) {
                 pluginInstance.emitPluginSignal(GodotSignals.REWARDED_FAILED_TO_LOAD.getValue(),
-                        adsProvider, errorCode, errorMessage);
+                        adsProvider, adName,errorCode, errorMessage);
             }
 
             @Override
-            public void onRewardedOpened(int adsProvider) {
+            public void onRewardedOpened(int adsProvider, String adName) {
                 pluginInstance.emitPluginSignal(GodotSignals.REWARDED_OPENED.getValue(),
-                        adsProvider);
+                        adsProvider, adName);
             }
 
             @Override
-            public void onRewardedClosed(int adsProvider) {
+            public void onRewardedClosed(int adsProvider, String adName) {
                 pluginInstance.emitPluginSignal(GodotSignals.REWARDED_CLOSED.getValue(),
-                        adsProvider);
+                        adsProvider, adName);
             }
 
             @Override
-            public void onReward(int adsProvider, String type, int amount) {
+            public void onReward(int adsProvider, String adName, String type, int amount) {
                 pluginInstance.emitPluginSignal(GodotSignals.REWARD.getValue(), adsProvider,
-                        type, amount);
+                        adName, type, amount);
             }
         });
     }
@@ -167,23 +167,23 @@ public class AdmobAds {
     private void initializeBanner(){
         banner = new AdmobBanner(activity, pluginInstance.getLayout(), new AdListeners.BannerListener() {
             @Override
-            public void onBannerLoaded(int adsProvider) {
-                pluginInstance.emitPluginSignal(GodotSignals.BANNER_LOADED.getValue(), adsProvider);
+            public void onBannerLoaded(int adsProvider, String adName) {
+                pluginInstance.emitPluginSignal(GodotSignals.BANNER_LOADED.getValue(), adsProvider, adName);
             }
 
             @Override
-            public void onBannerFailedToLoad(int adsProvider, int errorCode, String errorMessage) {
+            public void onBannerFailedToLoad(int adsProvider, String adName, int errorCode, String errorMessage) {
                 pluginInstance.emitPluginSignal(GodotSignals.BANNER_FAILED_TO_LOAD.getValue(),
-                        adsProvider, errorCode, errorMessage);
+                        adsProvider, adName, errorCode, errorMessage);
             }
 
             @Override
-            public void onBannerShow(int adsProvider) {
+            public void onBannerShow(int adsProvider, String adName) {
 
             }
 
             @Override
-            public void onBannerHide(int adsProvider) {
+            public void onBannerHide(int adsProvider, String adName) {
 
             }
         });

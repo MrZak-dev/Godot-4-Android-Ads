@@ -14,19 +14,19 @@ public class AdListeners {
 
 
     public interface RewardedListener {
-        void onRewardedLoaded(int adsProvider);
-        void onRewardedFailedToLoad(int adsProvider, int errorCode, String errorMessage);
-        void onRewardedOpened(int adsProvider);
-        void onRewardedClosed(int adsProvider);
-        void onReward(int adsProvider, String type, int amount);
+        void onRewardedLoaded(int adsProvider, String adName);
+        void onRewardedFailedToLoad(int adsProvider, String adName, int errorCode, String errorMessage);
+        void onRewardedOpened(int adsProvider, String adName);
+        void onRewardedClosed(int adsProvider, String adName);
+        void onReward(int adsProvider, String adName, String type, int amount);
     }
 
 
     public interface BannerListener {
-        void onBannerLoaded(int adsProvider);
-        void onBannerFailedToLoad(int adsProvider, int errorCode, String errorMessage);
-        void onBannerShow(int adsProvider);
-        void onBannerHide(int adsProvider);
+        void onBannerLoaded(int adsProvider, String adName);
+        void onBannerFailedToLoad(int adsProvider, String adName, int errorCode, String errorMessage);
+        void onBannerShow(int adsProvider, String adName);
+        void onBannerHide(int adsProvider, String adName);
     }
 
 }

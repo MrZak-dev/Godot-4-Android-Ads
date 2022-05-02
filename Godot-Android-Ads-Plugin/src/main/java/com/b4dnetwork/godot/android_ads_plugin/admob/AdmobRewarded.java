@@ -6,73 +6,81 @@ import androidx.annotation.NonNull;
 
 import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds.AdsProvider;
 import com.b4dnetwork.godot.android_ads_plugin.shared.AdListeners.RewardedListener;
+import com.b4dnetwork.godot.android_ads_plugin.shared.Utils;
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.OnUserEarnedRewardListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
+
+import java.util.HashMap;
+import java.util.Objects;
 
 public class AdmobRewarded {
 
     private final RewardedListener listener;
     private final Activity activity;
-    private RewardedAd rewardedInstance;
 
-    private boolean isLoaded = false;
+    private final HashMap<String, RewardedAd> rewardedInstances = new HashMap<>();
+    private final HashMap<String, Boolean> rewardedLoadStatus = new HashMap<>();
+
 
     AdmobRewarded(Activity activity, RewardedListener listener){
         this.activity = activity;
         this.listener = listener;
     }
 
-    public void load(String adId, AdRequest adRequest){
+    public void load(String adName, String adId, AdRequest adRequest){
         RewardedAd.load(this.activity, adId, adRequest, new RewardedAdLoadCallback() {
             @Override
             public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
-                rewardedInstance = rewardedAd;
-                isLoaded = true;
+                rewardedLoadStatus.put(adName, true);
+                rewardedInstances.put(adName, rewardedAd);
 
-                listener.onRewardedLoaded(AdsProvider.ADMOB.getValue());
-                setRewardedCallbacks();
+                setRewardedCallbacks(adName);
+                listener.onRewardedLoaded(AdsProvider.ADMOB.getValue(), adName);
             }
 
             @Override
             public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
-                rewardedInstance = null;
-                isLoaded = false;
+                rewardedLoadStatus.put(adName, false);
+                rewardedInstances.remove(adName);
 
-                listener.onRewardedFailedToLoad(AdsProvider.ADMOB.getValue(),
+                listener.onRewardedFailedToLoad(AdsProvider.ADMOB.getValue(), adName,
                         loadAdError.getCode(), loadAdError.getMessage());
             }
         });
     }
 
-    public void show(){
-        if(isLoaded){
-            rewardedInstance.show(this.activity, new OnUserEarnedRewardListener() {
-                @Override
-                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
-                    listener.onReward(AdsProvider.ADMOB.getValue(),
-                            rewardItem.getType(), rewardItem.getAmount());
-                }
-            });
+    public void show(String adName){
+        if (!Utils.isHashHasKy(rewardedInstances, adName)){
+            // TODO : log message no ad with name available
+            return;
+        }
+
+        if(rewardedLoadStatus.get(adName)){
+            rewardedInstances.get(adName).show(
+                    this.activity, rewardItem -> listener.onReward(AdsProvider.ADMOB.getValue(),
+                            adName, rewardItem.getType(), rewardItem.getAmount()));
         }
     }
 
 
-    private void setRewardedCallbacks(){
-        rewardedInstance.setFullScreenContentCallback(new FullScreenContentCallback() {
+    private void setRewardedCallbacks(String adName){
+        Objects.requireNonNull(rewardedInstances.get(adName)).setFullScreenContentCallback(
+                new FullScreenContentCallback() {
             @Override
             public void onAdShowedFullScreenContent() {
-                listener.onRewardedOpened(AdsProvider.ADMOB.getValue());
+                listener.onRewardedOpened(AdsProvider.ADMOB.getValue(), adName);
             }
 
             @Override
             public void onAdDismissedFullScreenContent() {
-                listener.onRewardedClosed(AdsProvider.ADMOB.getValue());
+                listener.onRewardedClosed(AdsProvider.ADMOB.getValue(), adName);
             }
         });
     }

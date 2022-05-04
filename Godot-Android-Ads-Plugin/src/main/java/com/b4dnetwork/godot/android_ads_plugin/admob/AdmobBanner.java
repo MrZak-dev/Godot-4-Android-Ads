@@ -14,7 +14,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.rewarded.RewardedAd;
 
 import java.util.HashMap;
 
@@ -54,7 +53,7 @@ public class AdmobBanner {
 
         frameParam.gravity = isOnTop ? Gravity.TOP : Gravity.BOTTOM;
 
-        if (!Utils.isHashHasKy(bannerInstances, adName)){
+        if (!Utils.mapHasKey(bannerInstances, adName)){
             // TODO : log message no ad with name available
             return;
         }

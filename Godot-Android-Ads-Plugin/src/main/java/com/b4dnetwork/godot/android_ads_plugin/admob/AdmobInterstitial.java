@@ -58,7 +58,7 @@ public class AdmobInterstitial {
 
 
     public void show(String adName){
-        if (!Utils.isHashHasKy(interstitialInstances, adName)){
+        if (!Utils.mapHasKey(interstitialInstances, adName)){
             // TODO : log message no ad with name available
             return;
         }

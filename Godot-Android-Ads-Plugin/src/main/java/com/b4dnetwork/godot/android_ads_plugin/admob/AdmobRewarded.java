@@ -7,13 +7,9 @@ import androidx.annotation.NonNull;
 import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds.AdsProvider;
 import com.b4dnetwork.godot.android_ads_plugin.shared.AdListeners.RewardedListener;
 import com.b4dnetwork.godot.android_ads_plugin.shared.Utils;
-import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.OnUserEarnedRewardListener;
-import com.google.android.gms.ads.interstitial.InterstitialAd;
-import com.google.android.gms.ads.rewarded.RewardItem;
 import com.google.android.gms.ads.rewarded.RewardedAd;
 import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
@@ -57,7 +53,7 @@ public class AdmobRewarded {
     }
 
     public void show(String adName){
-        if (!Utils.isHashHasKy(rewardedInstances, adName)){
+        if (!Utils.mapHasKey(rewardedInstances, adName)){
             // TODO : log message no ad with name available
             return;
         }

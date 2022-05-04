@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 public class Utils {
 
-    public static boolean isHashHasKy(HashMap map, String key){
+    public static boolean mapHasKey(HashMap map, String key){
         return map.containsKey(key);
     }
 }

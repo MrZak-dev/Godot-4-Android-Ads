@@ -6,7 +6,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 
-import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds.AdsProvider;
+import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds.ADS_PROVIDER;
 import com.b4dnetwork.godot.android_ads_plugin.shared.AdListeners.BannerListener;
 import com.b4dnetwork.godot.android_ads_plugin.shared.Utils;
 import com.google.android.gms.ads.AdListener;
@@ -40,10 +40,17 @@ public class AdmobBanner {
 
 
     public void show(String adName, boolean isOnTop){
-        boolean isLoaded = bannerLoadStatus.get(adName);
+        if (!Utils.mapHasKey(bannerLoadStatus, adName)){
+            return;
+        }
+
+        @SuppressWarnings("ConstantConditions") boolean isLoaded = bannerLoadStatus.get(adName);
 
         if (!isLoaded || isVisible){
-            return; // TODO : log message (banner not loaded yet)
+            listener.onLogMessage(
+                    Utils.LOG_TYPE.ERROR.getValue(),
+                    String.format("Admob Banner %s is not loaded or already displayed", adName));
+            return;
         }
 
         FrameLayout.LayoutParams frameParam = new FrameLayout.LayoutParams(
@@ -54,11 +61,15 @@ public class AdmobBanner {
         frameParam.gravity = isOnTop ? Gravity.TOP : Gravity.BOTTOM;
 
         if (!Utils.mapHasKey(bannerInstances, adName)){
-            // TODO : log message no ad with name available
+            listener.onLogMessage(
+                    Utils.LOG_TYPE.ERROR.getValue(),
+                    String.format("no Admob Banner with name %s loaded or exist", adName));
             return;
         }
 
         AdView bannerView = bannerInstances.get(adName);
+
+        //noinspection ConstantConditions
         bannerView.setLayoutParams(frameParam);
 
         layout.removeAllViews(); // Remove displayed banners first
@@ -67,7 +78,7 @@ public class AdmobBanner {
         isVisible = true;
         currentVisible = adName;
 
-        listener.onBannerShow(AdsProvider.ADMOB.getValue(), adName);
+        listener.onBannerShow(ADS_PROVIDER.ADMOB.getValue(), adName);
     }
 
 
@@ -78,7 +89,7 @@ public class AdmobBanner {
         isVisible = false;
 
         layout.removeAllViews();
-        listener.onBannerHide(AdsProvider.ADMOB.getValue(), currentVisible);
+        listener.onBannerHide(ADS_PROVIDER.ADMOB.getValue(), currentVisible);
     }
 
 
@@ -92,7 +103,7 @@ public class AdmobBanner {
             @Override
             public void onAdLoaded() {
                 bannerLoadStatus.put(adName, true);
-                listener.onBannerLoaded(AdsProvider.ADMOB.getValue(), adName);
+                listener.onBannerLoaded(ADS_PROVIDER.ADMOB.getValue(), adName);
             }
 
             @Override
@@ -100,7 +111,7 @@ public class AdmobBanner {
                 bannerLoadStatus.put(adName, false);
                 bannerInstances.remove(adName);
 
-                listener.onBannerFailedToLoad(AdsProvider.ADMOB.getValue(), adName,
+                listener.onBannerFailedToLoad(ADS_PROVIDER.ADMOB.getValue(), adName,
                         loadAdError.getCode(), loadAdError.getMessage());
             }
         });
@@ -114,6 +125,7 @@ public class AdmobBanner {
     private AdSize getAdSize(int adSize){
         switch (adSize){
             case 0:
+                //noinspection DuplicateBranchesInSwitch
                 return AdSize.BANNER;
             case 1:
                 return AdSize.LARGE_BANNER;

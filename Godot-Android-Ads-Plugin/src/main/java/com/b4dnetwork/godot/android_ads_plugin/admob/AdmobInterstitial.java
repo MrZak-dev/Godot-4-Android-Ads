@@ -11,7 +11,7 @@ import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
-import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds.AdsProvider;
+import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds.ADS_PROVIDER;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -39,7 +39,7 @@ public class AdmobInterstitial {
                 interstitialInstances.put(adName, interstitialAd);
                 setInterstitialCallbacks(adName);
 
-                listener.onInterstitialLoaded(AdsProvider.ADMOB.getValue(), adName);
+                listener.onInterstitialLoaded(ADS_PROVIDER.ADMOB.getValue(), adName);
             }
 
             @Override
@@ -48,7 +48,7 @@ public class AdmobInterstitial {
                 interstitialInstances.remove(adName);
 
                 listener.onInterstitialFailedToLoad(
-                        AdsProvider.ADMOB.getValue(),
+                        ADS_PROVIDER.ADMOB.getValue(),
                         adName,
                         loadAdError.getCode(),
                         loadAdError.getMessage());
@@ -59,10 +59,14 @@ public class AdmobInterstitial {
 
     public void show(String adName){
         if (!Utils.mapHasKey(interstitialInstances, adName)){
-            // TODO : log message no ad with name available
+            listener.onLogMessage(
+                    Utils.LOG_TYPE.ERROR.getValue(),
+                    String.format("no Admob Interstitial with name %s loaded or exist", adName));
             return;
         }
+        //noinspection ConstantConditions
         if(interstitialLoadStatus.get(adName)){
+            //noinspection ConstantConditions
             interstitialInstances.get(adName).show(activity);
         }
         // Log info ( interstitial not loaded yet call load to load it)
@@ -74,12 +78,12 @@ public class AdmobInterstitial {
                 .setFullScreenContentCallback(new FullScreenContentCallback() {
                 @Override
                 public void onAdShowedFullScreenContent() {
-                    listener.onInterstitialOpened(AdsProvider.ADMOB.getValue(), adName);
+                    listener.onInterstitialOpened(ADS_PROVIDER.ADMOB.getValue(), adName);
                 }
 
                 @Override
                 public void onAdDismissedFullScreenContent() {
-                    listener.onInterstitialClosed(AdsProvider.ADMOB.getValue(), adName);
+                    listener.onInterstitialClosed(ADS_PROVIDER.ADMOB.getValue(), adName);
                 }
         });
     }

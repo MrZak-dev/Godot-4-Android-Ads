@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
 
 import com.b4dnetwork.godot.android_ads_plugin.admob.AdmobAds;
+import com.b4dnetwork.godot.android_ads_plugin.shared.Utils;
 
 import org.godotengine.godot.Godot;
 import org.godotengine.godot.plugin.GodotPlugin;
@@ -50,7 +51,8 @@ public class GodotAndroidAds extends GodotPlugin {
     @UsedByGodot
     public void loadAdmobInterstitial(String adName, String adId){
         if (admobInstance == null) {
-            emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "Admob is not initialized");
             return;
         }
 
@@ -60,7 +62,8 @@ public class GodotAndroidAds extends GodotPlugin {
     @UsedByGodot
     public void showAdmobInterstitial(String adName){
         if (admobInstance == null) {
-            emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "Admob is not initialized");
             return;
         }
         admobInstance.showInterstitial(adName);
@@ -70,7 +73,8 @@ public class GodotAndroidAds extends GodotPlugin {
     @UsedByGodot
     public void loadAdmobRewarded(String adName, String adId){
         if(admobInstance == null){
-            emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "Admob is not initialized");
             return;
         }
 
@@ -81,7 +85,8 @@ public class GodotAndroidAds extends GodotPlugin {
     @UsedByGodot
     public void showAdmobRewarded(String adName){
         if(admobInstance == null){
-            emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "Admob is not initialized");
             return;
         }
 
@@ -92,7 +97,8 @@ public class GodotAndroidAds extends GodotPlugin {
     @UsedByGodot
     public void loadAdmobBanner(String adName, String adId, int adSize){
         if(admobInstance == null){
-            emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "Admob is not initialized");
             return;
         }
         admobInstance.loadBanner(adName, adId, adSize);
@@ -102,7 +108,8 @@ public class GodotAndroidAds extends GodotPlugin {
     @UsedByGodot
     public void showAdmobBanner(String adName, boolean isOnTop){
         if(admobInstance == null){
-            emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "Admob is not initialized");
             return;
         }
         admobInstance.showBanner(adName, isOnTop);
@@ -112,7 +119,8 @@ public class GodotAndroidAds extends GodotPlugin {
     @UsedByGodot
     public void hideAdmobBanner() {
         if(admobInstance == null){
-            emitSignal(GodotSignals.LOG_MESSAGE.getValue(), "Admob is not initialized");
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "Admob is not initialized");
             return;
         }
         admobInstance.hideBanner();
@@ -132,36 +140,40 @@ public class GodotAndroidAds extends GodotPlugin {
         Set<SignalInfo> signals = new ArraySet<>();
 
         // Interstitial signals
-        signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_LOADED.getValue(),
+        signals.add(new SignalInfo(GODOT_SIGNAL.INTERSTITIAL_LOADED.getValue(),
                 Integer.class, String.class));
-        signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_FAILED_TO_LOAD.getValue(),
+        signals.add(new SignalInfo(GODOT_SIGNAL.INTERSTITIAL_FAILED_TO_LOAD.getValue(),
                 Integer.class, String.class, Integer.class, String.class));
-        signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_OPENED.getValue(), Integer.class,
+        signals.add(new SignalInfo(GODOT_SIGNAL.INTERSTITIAL_OPENED.getValue(), Integer.class,
                 String.class));
-        signals.add(new SignalInfo(GodotSignals.INTERSTITIAL_CLOSED.getValue(), Integer.class,
+        signals.add(new SignalInfo(GODOT_SIGNAL.INTERSTITIAL_CLOSED.getValue(), Integer.class,
                 String.class));
 
         // Rewarded signals
-        signals.add(new SignalInfo(GodotSignals.REWARDED_LOADED.getValue(), Integer.class,
+        signals.add(new SignalInfo(GODOT_SIGNAL.REWARDED_LOADED.getValue(), Integer.class,
                 String.class));
-        signals.add(new SignalInfo(GodotSignals.REWARDED_FAILED_TO_LOAD.getValue(), Integer.class,
+        signals.add(new SignalInfo(GODOT_SIGNAL.REWARDED_FAILED_TO_LOAD.getValue(), Integer.class,
                 String.class, Integer.class, String.class));
-        signals.add(new SignalInfo(GodotSignals.REWARDED_OPENED.getValue(), Integer.class,
+        signals.add(new SignalInfo(GODOT_SIGNAL.REWARDED_OPENED.getValue(), Integer.class,
                 String.class));
-        signals.add(new SignalInfo(GodotSignals.REWARDED_CLOSED.getValue(), Integer.class,
+        signals.add(new SignalInfo(GODOT_SIGNAL.REWARDED_CLOSED.getValue(), Integer.class,
                 String.class));
-        signals.add(new SignalInfo(GodotSignals.REWARD.getValue(), Integer.class,String.class,
+        signals.add(new SignalInfo(GODOT_SIGNAL.REWARD.getValue(), Integer.class,String.class,
                 String.class,
                 Integer.class));
 
         //Banner signals
-        signals.add(new SignalInfo(GodotSignals.BANNER_LOADED.getValue(), Integer.class,
+        signals.add(new SignalInfo(GODOT_SIGNAL.BANNER_LOADED.getValue(), Integer.class,
                 String.class));
-        signals.add(new SignalInfo(GodotSignals.BANNER_FAILED_TO_LOAD.getValue(), Integer.class,
+        signals.add(new SignalInfo(GODOT_SIGNAL.BANNER_FAILED_TO_LOAD.getValue(), Integer.class,
                 String.class, Integer.class, String.class));
+        signals.add(new SignalInfo(GODOT_SIGNAL.BANNER_SHOW.getValue(), Integer.class,
+                String.class));
+        signals.add(new SignalInfo(GODOT_SIGNAL.BANNER_HIDE.getValue(), Integer.class,
+                String.class));
 
         // General signals
-        signals.add(new SignalInfo(GodotSignals.LOG_MESSAGE.getValue(), String.class));
+        signals.add(new SignalInfo(GODOT_SIGNAL.LOG_MESSAGE.getValue(), Integer.class, String.class));
 
         return signals;
     }
@@ -172,14 +184,14 @@ public class GodotAndroidAds extends GodotPlugin {
     }
 
 
-    public enum AdsProvider {
+    public enum ADS_PROVIDER {
         ADMOB(0),
         UNITY(1),
         AppLovin(2);
 
         private final int value;
 
-        AdsProvider(int value) {
+        ADS_PROVIDER(int value) {
             this.value = value;
         }
 
@@ -188,7 +200,7 @@ public class GodotAndroidAds extends GodotPlugin {
         }
     }
 
-    public enum GodotSignals {
+    public enum GODOT_SIGNAL {
         INTERSTITIAL_LOADED("_on_interstitial_loaded"),
         INTERSTITIAL_FAILED_TO_LOAD("_on_interstitial_failed_to_load"),
         INTERSTITIAL_OPENED("_on_interstitial_opened"),
@@ -202,6 +214,8 @@ public class GodotAndroidAds extends GodotPlugin {
 
         BANNER_LOADED("_on_banner_loaded"),
         BANNER_FAILED_TO_LOAD("_on_banner_failed_to_load"),
+        BANNER_SHOW("_on_banner_show"),
+        BANNER_HIDE("_on_banner_hide"),
 
 
         LOG_MESSAGE("_on_log_message");
@@ -209,7 +223,7 @@ public class GodotAndroidAds extends GodotPlugin {
 
         private final String value;
 
-        GodotSignals(String value) {
+        GODOT_SIGNAL(String value) {
             this.value = value;
         }
 

@@ -4,7 +4,7 @@ import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
-import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds.AdsProvider;
+import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds.ADS_PROVIDER;
 import com.b4dnetwork.godot.android_ads_plugin.shared.AdListeners.RewardedListener;
 import com.b4dnetwork.godot.android_ads_plugin.shared.Utils;
 import com.google.android.gms.ads.AdRequest;
@@ -30,6 +30,7 @@ public class AdmobRewarded {
         this.listener = listener;
     }
 
+
     public void load(String adName, String adId, AdRequest adRequest){
         RewardedAd.load(this.activity, adId, adRequest, new RewardedAdLoadCallback() {
             @Override
@@ -38,7 +39,7 @@ public class AdmobRewarded {
                 rewardedInstances.put(adName, rewardedAd);
 
                 setRewardedCallbacks(adName);
-                listener.onRewardedLoaded(AdsProvider.ADMOB.getValue(), adName);
+                listener.onRewardedLoaded(ADS_PROVIDER.ADMOB.getValue(), adName);
             }
 
             @Override
@@ -46,21 +47,26 @@ public class AdmobRewarded {
                 rewardedLoadStatus.put(adName, false);
                 rewardedInstances.remove(adName);
 
-                listener.onRewardedFailedToLoad(AdsProvider.ADMOB.getValue(), adName,
+                listener.onRewardedFailedToLoad(ADS_PROVIDER.ADMOB.getValue(), adName,
                         loadAdError.getCode(), loadAdError.getMessage());
             }
         });
     }
 
+
     public void show(String adName){
         if (!Utils.mapHasKey(rewardedInstances, adName)){
-            // TODO : log message no ad with name available
+            listener.onLogMessage(
+                    Utils.LOG_TYPE.ERROR.getValue(),
+                    String.format("no Admob Rewarded ad with name %s loaded or exist", adName));
             return;
         }
 
+        //noinspection ConstantConditions
         if(rewardedLoadStatus.get(adName)){
+            //noinspection ConstantConditions
             rewardedInstances.get(adName).show(
-                    this.activity, rewardItem -> listener.onReward(AdsProvider.ADMOB.getValue(),
+                    this.activity, rewardItem -> listener.onReward(ADS_PROVIDER.ADMOB.getValue(),
                             adName, rewardItem.getType(), rewardItem.getAmount()));
         }
     }
@@ -71,12 +77,12 @@ public class AdmobRewarded {
                 new FullScreenContentCallback() {
             @Override
             public void onAdShowedFullScreenContent() {
-                listener.onRewardedOpened(AdsProvider.ADMOB.getValue(), adName);
+                listener.onRewardedOpened(ADS_PROVIDER.ADMOB.getValue(), adName);
             }
 
             @Override
             public void onAdDismissedFullScreenContent() {
-                listener.onRewardedClosed(AdsProvider.ADMOB.getValue(), adName);
+                listener.onRewardedClosed(ADS_PROVIDER.ADMOB.getValue(), adName);
             }
         });
     }

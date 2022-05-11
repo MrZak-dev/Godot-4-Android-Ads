@@ -42,9 +42,9 @@ public class GodotAndroidAds extends GodotPlugin {
 
 
     @UsedByGodot
-    public void initializeAdmob(){
+    public void initializeAdmob(boolean gdprEnabled, boolean ccpaEnabled){
         admobInstance = new AdmobAds(this.activity);
-        admobInstance.initialize(this);
+        admobInstance.initialize(this, gdprEnabled, ccpaEnabled);
     }
 
 

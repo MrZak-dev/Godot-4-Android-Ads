@@ -1,11 +1,13 @@
 package com.b4dnetwork.godot.android_ads_plugin.admob;
 
 import android.app.Activity;
+import android.os.Bundle;
 
 import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds;
 import com.b4dnetwork.godot.android_ads_plugin.GodotAndroidAds.GODOT_SIGNAL;
 import com.b4dnetwork.godot.android_ads_plugin.shared.AdListeners;
 import com.b4dnetwork.godot.android_ads_plugin.shared.Utils;
+import com.google.ads.mediation.admob.AdMobAdapter;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 
@@ -26,9 +28,20 @@ public class AdmobAds {
         this.activity = activity;
     }
 
-    public void initialize(GodotAndroidAds pluginInstance){
+    public void initialize(GodotAndroidAds pluginInstance, boolean gdprEnabled, boolean ccpaEnabled){
         this.pluginInstance = pluginInstance;
-        this.adRequest = new AdRequest.Builder().build();
+
+        Bundle networkExtrasBundle = new Bundle();
+
+        if (ccpaEnabled){
+            networkExtrasBundle.putInt("rdp", 1); // Enable California Consumer Privacy Act (CCPA)
+        }
+        if (gdprEnabled){
+            networkExtrasBundle.putString("npa", "1"); // Enable General Data Protection Regulation
+        }
+
+        this.adRequest = new AdRequest.Builder().addNetworkExtrasBundle(
+                AdMobAdapter.class, networkExtrasBundle).build();
 
         MobileAds.initialize(activity, initializationStatus -> {
             this.pluginInstance.emitPluginSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),

@@ -7,7 +7,8 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
 
-import com.b4dnetwork.godot.android_ads_plugin.admob.AdmobAds;
+import com.b4dnetwork.godot.android_ads_plugin.admob.Admob;
+import com.b4dnetwork.godot.android_ads_plugin.applovin.AppLovin;
 import com.b4dnetwork.godot.android_ads_plugin.shared.Utils;
 
 import org.godotengine.godot.Godot;
@@ -22,7 +23,8 @@ public class GodotAndroidAds extends GodotPlugin {
     private final Activity activity;
     private FrameLayout layout = null;
 
-    private AdmobAds admobInstance = null;
+    private Admob admobInstance = null;
+    private AppLovin appLovinInstance = null;
 
     public GodotAndroidAds(Godot godot) {
         super(godot);
@@ -43,8 +45,14 @@ public class GodotAndroidAds extends GodotPlugin {
 
     @UsedByGodot
     public void initializeAdmob(boolean gdprEnabled, boolean ccpaEnabled){
-        admobInstance = new AdmobAds(this.activity);
+        admobInstance = new Admob(this.activity);
         admobInstance.initialize(this, gdprEnabled, ccpaEnabled);
+    }
+
+    @UsedByGodot
+    public void initializeAppLovin(){
+        appLovinInstance = new AppLovin(this.activity);
+        appLovinInstance.initialize(this);
     }
 
 
@@ -126,6 +134,84 @@ public class GodotAndroidAds extends GodotPlugin {
         admobInstance.hideBanner();
     }
 
+
+    @UsedByGodot
+    public void loadAppLovinInterstitial(String adName, String adId){
+        if (appLovinInstance == null) {
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "AppLovin is not initialized");
+            return;
+        }
+
+        appLovinInstance.loadInterstitial(adName, adId);
+    }
+
+    @UsedByGodot
+    public void showAppLovinInterstitial(String adName){
+        if (appLovinInstance == null) {
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "AppLovin is not initialized");
+            return;
+        }
+        appLovinInstance.showInterstitial(adName);
+    }
+
+
+    @UsedByGodot
+    public void loadAppLovinRewarded(String adName, String adId){
+        if(appLovinInstance == null){
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "AppLovin is not initialized");
+            return;
+        }
+
+        appLovinInstance.loadRewarded(adName, adId);
+    }
+
+
+    @UsedByGodot
+    public void showAppLovinRewarded(String adName){
+        if(appLovinInstance == null){
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "AppLovin is not initialized");
+            return;
+        }
+
+        appLovinInstance.showRewarded(adName);
+    }
+
+
+    @UsedByGodot
+    public void loadAppLovinBanner(String adName, String adId){
+        if(appLovinInstance == null){
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "AppLovin is not initialized");
+            return;
+        }
+        appLovinInstance.loadBanner(adName, adId);
+    }
+
+
+    @UsedByGodot
+    public void showAppLovinBanner(String adName, boolean isOnTop){
+        if(appLovinInstance == null){
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "AppLovin is not initialized");
+            return;
+        }
+        appLovinInstance.showBanner(adName, isOnTop);
+    }
+
+
+    @UsedByGodot
+    public void hideAppLovinBanner() {
+        if(appLovinInstance == null){
+            emitSignal(GODOT_SIGNAL.LOG_MESSAGE.getValue(),
+                    Utils.LOG_TYPE.ERROR.getValue(), "AppLovin is not initialized");
+            return;
+        }
+        appLovinInstance.hideBanner();
+    }
 
     @NonNull
     @Override

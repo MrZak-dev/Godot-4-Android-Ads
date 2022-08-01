@@ -48,10 +48,13 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     // Godot lib
-    compileOnly(files('libs/godot-lib.release.aar'))
+    compileOnly(files('libs/godot-lib.aar'))
 
     //Admob dep
     implementation 'com.google.android.gms:play-services-ads:20.6.0'
+
+    implementation 'com.applovin:applovin-sdk:11.4.4'
+
 
 
 }

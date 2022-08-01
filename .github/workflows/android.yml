@@ -19,11 +19,19 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
         cache: gradle
+    
+    - name: Download Godot lib 
+      run: curl https://downloads.tuxfamily.org/godotengine/4.0/alpha13/godot-lib.4.0.alpha13.release.aar -o "godot-lib.aar"
+
+    - name: Move Godot lib to libs path
+      run: mv ./godot-lib.aar  Godot-Android-Ads-Plugin/libs/
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
+
     - name: Build with Gradle
       run: ./gradlew build
+      
     - name: 'Upload Artifact'
       uses: actions/upload-artifact@v3
       with:

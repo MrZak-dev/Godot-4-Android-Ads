@@ -5,11 +5,11 @@ plugins {
 ext.pluginVersion = "0.1.0"
 
 android {
-    compileSdk 31
+    compileSdk 32
 
     defaultConfig {
         minSdk 19
-        targetSdk 30
+        targetSdk 32
         versionCode 1
         versionName pluginVersion
 
@@ -51,9 +51,11 @@ dependencies {
     compileOnly(files('libs/godot-lib.aar'))
 
     //Admob dep
-    implementation 'com.google.android.gms:play-services-ads:20.6.0'
+    implementation 'com.google.android.gms:play-services-ads:22.3.0'
 
-    implementation 'com.applovin:applovin-sdk:11.4.4'
+    implementation 'com.applovin:applovin-sdk:+'
+    implementation 'com.applovin.mediation:unityads-adapter:+'
+
 
 
 

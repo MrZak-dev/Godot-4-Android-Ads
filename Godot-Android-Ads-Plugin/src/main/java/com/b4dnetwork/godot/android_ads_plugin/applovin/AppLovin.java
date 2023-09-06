@@ -114,7 +114,7 @@ public class AppLovin {
             public void onInterstitialFailedToLoad(
                     int adsProvider, String adName,int errorCode, String errorMessage) {
                 pluginInstance.emitPluginSignal(GodotAndroidAds.GODOT_SIGNAL.INTERSTITIAL_FAILED_TO_LOAD.getValue(),
-                        adsProvider, errorCode, errorMessage);
+                        adsProvider, adName, errorCode, errorMessage);
             }
 
             @Override

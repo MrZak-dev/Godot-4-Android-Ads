@@ -259,6 +259,7 @@ public class GodotAndroidAds extends GodotPlugin {
                 String.class));
 
         // General signals
+        signals.add(new SignalInfo(GODOT_SIGNAL.AD_NETWORK_INITIALIZED.getValue(), Integer.class));
         signals.add(new SignalInfo(GODOT_SIGNAL.LOG_MESSAGE.getValue(), Integer.class, String.class));
 
         return signals;
@@ -303,6 +304,7 @@ public class GodotAndroidAds extends GodotPlugin {
         BANNER_SHOW("_on_banner_show"),
         BANNER_HIDE("_on_banner_hide"),
 
+        AD_NETWORK_INITIALIZED("_on_ad_network_initialized"),
 
         LOG_MESSAGE("_on_log_message");
 

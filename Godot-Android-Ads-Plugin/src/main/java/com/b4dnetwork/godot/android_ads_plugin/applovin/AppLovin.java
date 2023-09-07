@@ -31,6 +31,9 @@ public class AppLovin {
 
         AppLovinSdk.initializeSdk(activity, configuration -> {
             isInitialized = true;
+            pluginInstance.emitPluginSignal(
+                    GodotAndroidAds.GODOT_SIGNAL.AD_NETWORK_INITIALIZED.getValue(),
+                    GodotAndroidAds.ADS_PROVIDER.AppLovin.getValue());
         });
 
         initializeInterstitial();

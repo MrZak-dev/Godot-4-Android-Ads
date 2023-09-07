@@ -86,6 +86,10 @@ public class AppLovinBanner implements BannerAd {
 
 
     public void hide(){
+        if(currentVisible == null)
+        {
+            return;
+        }
         bannerLoadStatus.put(currentVisible, false);
         bannerInstances.remove(currentVisible);
 
